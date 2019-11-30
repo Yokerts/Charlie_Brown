@@ -8,7 +8,7 @@ class LoginService {
 			password: form.password,
 		};
 		return new Promise((resolve, reject) => {
-			HttpRequest.post('_Log_In', params, {authentication: false}).then((response) => {
+			HttpRequest.post('_login', params, {authentication: false}).then((response) => {
 				let Usr = {
 					token: response.data.token || '',
 					expiracion: response.data.expiracion || '',

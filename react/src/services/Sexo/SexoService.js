@@ -2,10 +2,21 @@ import {HttpRequest} from '../../settings/Libs/Libs';
 
 class SexoService {
 	
+	static get = () => {
+		let params = {};
+		return new Promise((resolve, reject) => {
+			HttpRequest.get('_sexos', params).then((response) => {
+				resolve(response);
+			}).catch((error) => {
+				reject(error);
+			});
+		});
+	};
+
 	static all = () => {
 		let params = {};
 		return new Promise((resolve, reject) => {
-			HttpRequest.post('_Sexo_Datos', params).then((response) => {
+			HttpRequest.post('_sexo_datos', params).then((response) => {
 				resolve(response);
 			}).catch((error) => {
 				reject(error);
@@ -18,7 +29,7 @@ class SexoService {
 			id_cat_sexo: item.id_cat_sexo
 		};
 		return new Promise((resolve, reject) => {
-			HttpRequest.post('_Sexo_Xid', params).then((response) => {
+			HttpRequest.post('_sexo_xid', params).then((response) => {
 				resolve(response);
 			}).catch((error) => {
 				reject(error);
@@ -33,7 +44,7 @@ class SexoService {
 			activo: form.activo,
 		};
 		return new Promise((resolve, reject) => {
-			HttpRequest.post('_Sexo_Agregar', params).then((response) => {
+			HttpRequest.post('_sexo_agregar', params).then((response) => {
 				resolve(response);
 			}).catch((error) => {
 				reject(error);
@@ -48,7 +59,7 @@ class SexoService {
 			activo: form.activo,
 		};
 		return new Promise((resolve, reject) => {
-			HttpRequest.post('_Sexo_Editar', params).then((response) => {
+			HttpRequest.post('_sexo_editar', params).then((response) => {
 				resolve(response);
 			}).catch((error) => {
 				reject(error);
@@ -61,7 +72,7 @@ class SexoService {
 			id_cat_sexo: item.id_cat_sexo
 		};
 		return new Promise((resolve, reject) => {
-			HttpRequest.post('_Sexo_Eliminar', params).then((response) => {
+			HttpRequest.post('_sexo_eliminar', params).then((response) => {
 				resolve(response);
 			}).catch((error) => {
 				reject(error);

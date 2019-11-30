@@ -5,9 +5,9 @@ import App from './components/App';
 
 import Login from './components/Login/Login';
 import Home from './components/Home/Home';
-import Sexo from './components/Sexo/Sexo';
 import Usuario from './components/Usuario/Usuario';
 import Pagina404 from './components/Pagina404/Pagina404';
+import Administrador from "./components/Administrador/Administrador";
 
 class AppRoutes extends Component {
 	
@@ -25,7 +25,7 @@ class AppRoutes extends Component {
 						
 						<Route exact path="/home/:nombre" component={Home}/>
 						
-						<Route exact path="/sexo" component={Sexo}/>
+						<Route exact path="/administrador" component={Administrador}/>
 						
 						<Route exact path="/usuario" component={Usuario}/>
 						

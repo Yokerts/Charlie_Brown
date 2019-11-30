@@ -12,11 +12,18 @@ import Typography from '@material-ui/core/Typography';
 import $State, {FieldsJs} from '../../settings/Libs/Libs';
 import LoginService from "../../services/Login/LoginService";
 
+import loginImage from '../../assets/fondo_ini.jpg';
+import ModalRegistro from "./includes/ModalRegistro";
+
+import {AddOutlined} from "@material-ui/icons";
+
+
 
 class Login extends Component {
 	
 	state = {};
-	
+
+
 	constructor() {
 		super();
 		this.state = {
@@ -33,8 +40,16 @@ class Login extends Component {
 			alert(error.mensaje)
 		});
 	};
-	
+
+	registro = () => {
+		$State.go(this.props, 'registro')
+	};
+
+
+
 	render() {
+		const url_fondo = loginImage;
+
 		return (
 			<Fragment>
 				<Grid
@@ -42,7 +57,7 @@ class Login extends Component {
 					direction="row"
 					justify="center"
 					alignItems="center"
-					style={{height: '100vh', background: 'lightgray'}}
+					style={{height: '100vh', source: {require: '../../assets/fondo_ini.jpg'} }}
 				>
 					<Grid item xs={8} sm={6} md={3} lg={3} xl={3}>
 						<Card>
@@ -87,7 +102,14 @@ class Login extends Component {
 							
 							</CardContent>
 							<CardActions>
-								<Button size="small" onClick={() => this.login()}>Login</Button>
+								<ModalRegistro
+									tipo={'add'}
+									item={{}}
+									RefrechList={this.RefrechList}
+									componente={<Button variant="contained">Registro </Button>}
+								/>
+								<Button variant="contained" color="primary" onClick={() => this.login()}>Login</Button>
+
 							</CardActions>
 						</Card>
 					</Grid>

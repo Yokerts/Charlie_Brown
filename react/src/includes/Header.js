@@ -43,8 +43,8 @@ class Header extends Component {
 		$State.go(this.props, 'home', {});
 	};
 	
-	Sexo = () => {
-		$State.go(this.props, 'sexo', {});
+	Administrador = () => {
+		$State.go(this.props, 'administrador', {});
 	};
 	
 	Usuario = () => {
@@ -88,11 +88,11 @@ class Header extends Component {
 							</ListItemIcon>
 							<ListItemText primary={'Principal'}/>
 						</ListItem>
-						<ListItem button onClick={this.Sexo}>
+						<ListItem button onClick={this.Administrador}>
 							<ListItemIcon>
 								<ListAltOutlined/>
 							</ListItemIcon>
-							<ListItemText primary={'Sexo'}/>
+							<ListItemText primary={'Rol Administrador'}/>
 						</ListItem>
 						<ListItem button onClick={this.Usuario}>
 							<ListItemIcon>
