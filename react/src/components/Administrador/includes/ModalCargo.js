@@ -37,6 +37,7 @@ class ModalCargo extends Component {
             open: true,
             monto_cargo: 750.00,
             id_cat_mes: item.id_cat_mes || '',
+            id_usuario: item.id_usuario || '',
             fecha_cargo: item.mes,
             dia_formato: moment(item.mes).format("DD MMMM YYYY") || '',
         });
@@ -120,7 +121,7 @@ class ModalCargo extends Component {
                         <Grid container spacing={2}>
 
                             <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-                                <label>Seguro que desea realizar el cargo para la fecha: { this.state.dia_formato} por la cantidad de: ${this.state.monto_cargo}</label>
+                                <label>Seguro que desea realizar el cargo para la fecha: <strong>{this.state.dia_formato}</strong> por la cantidad de: <strong>${this.state.monto_cargo}</strong></label>
                             </Grid>
 
                             <Grid item xs={6} sm={6} md={6} lg={4} xl={4}>

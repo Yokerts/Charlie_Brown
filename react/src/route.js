@@ -6,6 +6,7 @@ import App from './components/App';
 import Login from './components/Login/Login';
 import Home from './components/Home/Home';
 import Usuario from './components/Usuario/Usuario';
+import Estandar from './components/Estandar/Estandar';
 import Pagina404 from './components/Pagina404/Pagina404';
 import Administrador from "./components/Administrador/Administrador";
 
@@ -27,8 +28,10 @@ class AppRoutes extends Component {
 						
 						<Route exact path="/administrador" component={Administrador}/>
 						
+						<Route exact path="/estandar" component={Estandar}/>
+
 						<Route exact path="/usuario" component={Usuario}/>
-						
+
 						<Route component={Pagina404}/>
 					
 					</Switch>

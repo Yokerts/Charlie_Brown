@@ -58,5 +58,7 @@ Route::group(['middleware' => 'cors'], function () {
     Route::post('_cargo_agregar', 'CargoController@add');
     Route::post('_cargo_xid', 'CargoController@xid');
 
+    Route::post('_saldo_agregar', 'SaldoController@add');
+
 });
 

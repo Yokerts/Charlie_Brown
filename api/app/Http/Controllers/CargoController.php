@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class CargoController extends Controller
 {
@@ -186,9 +187,7 @@ class CargoController extends Controller
                     $monto_cargo = $data['data']['monto_cargo'] ?? null;
                     $fecha_cargo = $data['data']['fecha_cargo'] ?? null;
                     $id_usuario = $data['data']['id_usuario'] ?? null;
-
-                    $fecha_cargo = date('Y-m-d H:i:s', strtotime($fecha_cargo));
-
+                    $fecha_cargo = date('Y-m-d', strtotime($fecha_cargo));
                     if ($id_usuario) {
                         $usuarios = DB::table('cargos')->insertGetId([
                             "monto_cargo" => $monto_cargo,

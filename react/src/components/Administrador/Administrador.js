@@ -11,6 +11,7 @@ import BotonFlotante from "../../includes/BotonFlotante";
 import ModalSexo from "./includes/ModalAdministrador";
 import ModalAdministrador from "./includes/ModalAdministrador";
 import ModalCargo from "./includes/ModalCargo";
+import ModalSaldo from "./includes/ModalSaldo";
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -32,6 +33,8 @@ class Administrador extends Component {
             lista: [],
             id_cat_mes: '',
             cat_meses: [],
+
+            hoy: new Date(),
         };
         this.all();
         this.meses();
@@ -93,7 +96,8 @@ class Administrador extends Component {
 
     updateDate = (date) => {
         this.setState({
-            mes: date.toString()
+            mes: date.toString(),
+            hoy: new Date(date)
         })
     }
 
@@ -101,9 +105,6 @@ class Administrador extends Component {
     render() {
 
         const {params} = this.props.match;
-
-        const hoy = new Date();
-
 
 
         return (
@@ -123,10 +124,10 @@ class Administrador extends Component {
                                     margin="normal"
                                     id="date-picker-inline"
                                     label="Fecha de cargo"
-                                    value={hoy}
-                                    onChange={(e) => {
-                                        console.log(e);
-                                        this.updateDate(e)
+                                    value={this.state.hoy}
+                                    onChange={(e, value) => {
+                                        console.log(value);
+                                        this.updateDate(value)
                                     }}
                                     KeyboardButtonProps={{
                                         'aria-label': 'change date',
@@ -190,7 +191,7 @@ class Administrador extends Component {
                                 <th>Teléfono</th>
                                 <th>Email</th>
                                 <th>Saldo</th>
-                                <th></th>
+                                <th>Cargar</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -205,13 +206,46 @@ class Administrador extends Component {
                                     <td>{item.email}</td>
                                     <td>{item.saldo}</td>
                                     <td>
-                                        <ModalAdministrador
-                                            tipo={'add'}
-                                            item={{}}
-                                            RefrechList={this.RefrechList}
-                                            componente={<Button color="primary" variant="contained">Cargar
-                                                Mensualidad </Button>}
-                                        />
+                                        <Grid container direction="row" justify="center" alignItems="center"
+                                              spacing={2}>
+
+                                            <Grid item xs={6} sm={12} md={6} lg={6} xl={6}>
+                                                <div style={{textAlign: "center"}}>
+                                                    <ModalCargo
+                                                        tipo={'add'}
+                                                        item={{
+                                                            id_cat_mes: this.state.id_cat_mes,
+                                                            mes: this.state.mes,
+                                                            id_usuario: this.state.id_usuario
+                                                        } || {}}
+                                                        RefrechList={this.RefrechList}
+                                                        componente={<Button style={{margin: '5px'}} color="primary"
+                                                                            variant="contained">
+                                                            Mensualidad
+                                                        </Button>}
+                                                    />
+                                                </div>
+                                            </Grid>
+                                            <Grid item xs={6} sm={12} md={6} lg={6} xl={6}>
+                                                <div style={{textAlign: "left"}}>
+                                                    <ModalSaldo
+                                                        tipo={'add'}
+                                                        item={{
+                                                            nombre: item.nombre,
+                                                            apellido_paterno: item.apellido_paterno,
+                                                            apellido_materno: item.apellido_materno,
+                                                            id_cat_mes: this.state.id_cat_mes,
+                                                            mes: this.state.mes,
+                                                            id_usuario: item.id_usuario
+                                                        } || {}}
+                                                        RefrechList={this.RefrechList}
+                                                        componente={<Button style={{margin: '5px'}} color="secondary"
+                                                                            variant="contained">
+                                                            Saldo </Button>}
+                                                    />
+                                                </div>
+                                            </Grid>
+                                        </Grid>
                                     </td>
                                 </tr>
                             ))}
