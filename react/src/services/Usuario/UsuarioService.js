@@ -12,7 +12,20 @@ class UsuarioService {
 			});
 		});
 	};
-	
+
+	static allEstandar = () => {
+		let params = {
+			id_cat_tipo_permiso: 2
+		};
+		return new Promise((resolve, reject) => {
+			HttpRequest.post('_usuario_permiso_datos', params).then((response) => {
+				resolve(response);
+			}).catch((error) => {
+				reject(error);
+			});
+		});
+	};
+
 	static show = (item) => {
 		let params = {
 			id_usuario: item.id_usuario

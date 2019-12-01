@@ -1,5 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import SexoService from "../../services/Sexo/SexoService";
+import UsuarioService from "../../services/Usuario/UsuarioService";
 import MesesService from "../../services/Meses/MesesService";
 import Header from "../../includes/Header";
 import Grid from '@material-ui/core/Grid';
@@ -8,8 +9,19 @@ import TextField from '@material-ui/core/TextField';
 import {AddOutlined, DeleteOutlined, EditOutlined, SearchOutlined} from '@material-ui/icons';
 import BotonFlotante from "../../includes/BotonFlotante";
 import ModalSexo from "./includes/ModalAdministrador";
+import ModalAdministrador from "./includes/ModalAdministrador";
+import ModalCargo from "./includes/ModalCargo";
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+    MuiPickersUtilsProvider,
+    KeyboardTimePicker,
+    KeyboardDatePicker,
+} from '@material-ui/pickers';
+
 
 class Administrador extends Component {
+
 
     state = {};
 
@@ -30,7 +42,7 @@ class Administrador extends Component {
     };
 
     all = () => {
-        SexoService.all().then(response => {
+        UsuarioService.allEstandar().then(response => {
             this.setState({
                 lista: response.data
             });
@@ -64,18 +76,67 @@ class Administrador extends Component {
         });
     };
 
+    check_mes = (item) => {
+        var mes = "";
+        for (var x = 0; x < this.state.cat_meses.length; x++) {
+            if (this.state.cat_meses[x].id == item) {
+                mes = this.state.cat_meses[x].mes
+            }
+        }
+
+        this.setState({
+            mes: mes
+        })
+        return mes;
+    }
+
+
+    updateDate = (date) => {
+        this.setState({
+            mes: date.toString()
+        })
+    }
+
+
     render() {
 
         const {params} = this.props.match;
+
+        const hoy = new Date();
+
+
 
         return (
             <Fragment>
 
                 <Header {...this.props}/>
 
-                <Grid container spacing={2}>
-                    <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-                        <Grid item xs={12} sm={12} md={4} lg={4} xl={4}>
+                <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
+
+                    <Grid item xs={4} sm={12} md={6} lg={6} xl={6}>
+                        <div style={{textAlign: "right"}}>
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <KeyboardDatePicker
+                                    disableToolbar
+                                    variant="inline"
+                                    format="MM/dd/yyyy"
+                                    margin="normal"
+                                    id="date-picker-inline"
+                                    label="Fecha de cargo"
+                                    value={hoy}
+                                    onChange={(e) => {
+                                        console.log(e);
+                                        this.updateDate(e)
+                                    }}
+                                    KeyboardButtonProps={{
+                                        'aria-label': 'change date',
+                                    }}
+                                />
+                            </MuiPickersUtilsProvider>
+                        </div>
+                    </Grid>
+                    {/*<Grid item xs={4} sm={12} md={4} lg={4} xl={4}>
+                        <div style={{textAlign: "center"}}>
                             <TextField
                                 select
                                 label="Mes"
@@ -88,60 +149,68 @@ class Administrador extends Component {
                                 }}
                                 value={this.state.id_cat_mes}
                                 onChange={(e) => {
+                                    console.log(e.target.value)
                                     this.setState({
                                         id_cat_mes: e.target.value
                                     })
+                                    this.check_mes(e.target.value);
                                 }}
                                 disabled={this.props.tipo === 'view'}
                             >
                                 <option value={''}>&nbsp;</option>
                                 {this.state.cat_meses.map((item, index) => (
-                                    <option key={index} value={item.id_cat_meses}>
+                                    <option key={index} value={item.id}>
                                         {item.mes}
                                     </option>
                                 ))}
                             </TextField>
-                        </Grid>
-
-                        <Grid item xs={12} sm={12} md={4} lg={4} xl={4}>
-                            <Button variant="contained" color="primary" onClick={() => this.close()}>
-                                Cargar Mensualidad
-                            </Button>
-                        </Grid>
+                        </div>
+                    </Grid>*/}
+                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+                        <div style={{textAlign: "left"}}>
+                            <ModalCargo
+                                tipo={'add'}
+                                item={{id_cat_mes: this.state.id_cat_mes, mes: this.state.mes} || {}}
+                                RefrechList={this.RefrechList}
+                                componente={<Button style={{margin: '25px'}} color="primary" variant="contained">Cargar
+                                    Mensualidad General </Button>}
+                            />
+                        </div>
                     </Grid>
-
 
                     <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                         <table style={{width: '100%'}} border={1}>
                             <thead>
                             <tr>
-                                <th>id_cat_sexo</th>
-                                <th>sexo</th>
-                                <th>activo</th>
-                                <th>acciones</th>
+                                <th>Id</th>
+                                <th>Usuario</th>
+                                <th>Nombre</th>
+                                <th>Apellido Paterno</th>
+                                <th>Apellido Materno</th>
+                                <th>Teléfono</th>
+                                <th>Email</th>
+                                <th>Saldo</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
                             {this.state.lista.map((item, index) => (
                                 <tr key={index}>
-                                    <td>{item.id_cat_sexo}</td>
-                                    <td>{item.sexo}</td>
-                                    <td>{item.activo}</td>
+                                    <td>{item.id_usuario}</td>
+                                    <td>{item.username}</td>
+                                    <td>{item.nombre}</td>
+                                    <td>{item.apellido_paterno}</td>
+                                    <td>{item.apellido_materno}</td>
+                                    <td>{item.telefono}</td>
+                                    <td>{item.email}</td>
+                                    <td>{item.saldo}</td>
                                     <td>
-                                        <DeleteOutlined onClick={() => this.delete(item)}/>
-
-                                        <ModalSexo
-                                            tipo={'edit'}
-                                            item={item || {}}
+                                        <ModalAdministrador
+                                            tipo={'add'}
+                                            item={{}}
                                             RefrechList={this.RefrechList}
-                                            componente={<EditOutlined/>}
-                                        />
-
-                                        <ModalSexo
-                                            tipo={'view'}
-                                            item={item || {}}
-                                            RefrechList={this.RefrechList}
-                                            componente={<SearchOutlined/>}
+                                            componente={<Button color="primary" variant="contained">Cargar
+                                                Mensualidad </Button>}
                                         />
                                     </td>
                                 </tr>
@@ -151,13 +220,6 @@ class Administrador extends Component {
 
                     </Grid>
                 </Grid>
-
-                <ModalSexo
-                    tipo={'add'}
-                    item={{}}
-                    RefrechList={this.RefrechList}
-                    componente={<BotonFlotante icono={<AddOutlined/>}/>}
-                />
 
             </Fragment>
         );

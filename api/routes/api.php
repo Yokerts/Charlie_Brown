@@ -53,5 +53,10 @@ Route::group(['middleware' => 'cors'], function () {
     Route::post('_usuario_editar', 'UsuarioController@edit');
     Route::post('_usuario_eliminar', 'UsuarioController@delete');
 
+    Route::post('_usuario_permiso_datos', 'UsuarioController@permiso');
+
+    Route::post('_cargo_agregar', 'CargoController@add');
+    Route::post('_cargo_xid', 'CargoController@xid');
+
 });
 

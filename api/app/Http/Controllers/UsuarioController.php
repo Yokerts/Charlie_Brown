@@ -484,4 +484,91 @@ class UsuarioController extends Controller
 
         return $response;
     }
+
+    public function permiso()
+    {
+        $data = $this->DataRequest();
+
+        if ($this->AccessToken($data['token'], $data['credenciales'], $Usr, $errors)) {
+
+            $validator = Validator::make($data['data'], [
+                'id_cat_tipo_permiso' => 'required',
+            ]);
+
+            $flag = false;
+
+            if (!$validator->fails()) {
+
+                DB::beginTransaction();
+
+                try {
+
+                    $id_cat_tipo_permiso = $data['data']['id_cat_tipo_permiso'];
+
+                    $result = DB::table('usuario')
+                        ->select('usuario.*')
+                        ->where('usuario.id_cat_tipo_permiso', '=', $id_cat_tipo_permiso)
+                        ->get();
+
+                    foreach ($result as $key => $row) {
+                        if ($row->foto) {
+                            $row->foto_archivo = $row->foto;
+                            $formato = explode('.', $row->foto_archivo);
+                            if (count($formato) === 2) {
+                                $row->foto_formato = $formato[1];
+                            } else {
+                                $row->foto_formato = '';
+                            }
+                        } else {
+                            $row->foto_archivo = '';
+                            $row->foto_formato = '';
+                        }
+                    }
+
+                    if ($result) {
+                        $flag = true;
+                        $status = 200;
+                        $message = "Datos encontrados.";
+                        $data = $result;
+                        DB::commit();
+                    } else {
+                        $flag = false;
+                        $status = 400;
+                        $message = "Datos no encontrados.";
+                        $data = array();
+                        DB::rollback();
+                    }
+
+                    $response = [
+                        "success" => $flag,
+                        "status" => $status,
+                        "message" => $message,
+                        "data" => $data,
+                        "user" => $Usr,
+                    ];
+
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    return $this->ErrorTransaction($e);
+                }
+            } else {
+                $response = [
+                    "success" => $flag,
+                    "status" => 400,
+                    "message" => "No se encontraron datos.",
+                    "errors" => $validator->errors()->messages()
+                ];
+            }
+
+        } else {
+            $response = [
+                "success" => false,
+                "status" => 400,
+                "message" => "Token invalido.",
+                "errors" => $errors
+            ];
+        }
+
+        return $response;
+    }
 }
