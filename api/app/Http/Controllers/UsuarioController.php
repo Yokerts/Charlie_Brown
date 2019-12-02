@@ -120,12 +120,28 @@ class UsuarioController extends Controller
                         ->select('saldos.*')
                         ->where('saldos.id_usuario', '=', $id_usuario)
                         ->get();
+
+
                     if (count($saldos)>0) {
                         $saldo_total=0;
                         for ($x = 0; $x<count($saldos); $x++) {
                             $saldo_total = $saldo_total+$saldos[$x]->monto_saldo;
                         }
                         $row->saldo= $row->saldo+$saldo_total;
+                    }
+
+                    $pagos = DB::table('pagos')
+                        ->select('pagos.*')
+                        ->where('pagos.id_usuario', '=', $id_usuario)
+                        ->get();
+
+
+                    if (count($pagos)>0) {
+                        $saldo_pagos=0;
+                        for ($x = 0; $x<count($pagos); $x++) {
+                            $saldo_pagos = $saldo_pagos+$pagos[$x]->monto_pago;
+                        }
+                        $row->saldo = $row->saldo-$saldo_pagos;
                     }
 
 

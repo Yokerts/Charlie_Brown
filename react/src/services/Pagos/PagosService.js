@@ -15,10 +15,25 @@ class PagosService {
         });
     };
 
+    static show = (item) => {
+        let params = {
+            id_usuario: item.id_usuario
+        };
+        return new Promise((resolve, reject) => {
+            HttpRequest.post('_pago_xid', params).then((response) => {
+                resolve(response);
+            }).catch((error) => {
+                reject(error);
+            });
+        });
+    };
+
     static add = (item) => {
         let params = {
             id_usuario: item.id_usuario,
-            monto_saldo: item.monto_saldo,
+            id_cargo: item.id_cargo,
+            monto_pago: item.monto_pago,
+            fecha_pago: item.fecha_pago,
         };
         return new Promise((resolve, reject) => {
             HttpRequest.post('_pago_agregar', params).then((response) => {

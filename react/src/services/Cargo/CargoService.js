@@ -4,7 +4,9 @@ class CargoService {
 
     static get = (item) => {
         let params = {
-            "id_usuario": item.id_usuario || ''
+            "id_usuario": item.id_usuario || '',
+            "fecha_inicio": item.fecha_inicio || '',
+            "fecha_fin": item.fecha_fin || ''
         };
         return new Promise((resolve, reject) => {
             HttpRequest.post('_cargo_datos', params).then((response) => {

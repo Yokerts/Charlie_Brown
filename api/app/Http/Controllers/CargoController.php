@@ -16,8 +16,7 @@ class CargoController extends Controller
         if ($this->AccessToken($data['token'], $data['credenciales'], $Usr, $errors)) {
 
             $validator = Validator::make($data['data'], [
-                'monto_cargo' => '',
-                'fecha_cargo' => '',
+                'id_usuario' => ''
             ]);
 
 
@@ -29,22 +28,40 @@ class CargoController extends Controller
 
                 try {
 
-                    $monto_cargo = $data['data']['monto_cargo'] ?? null;
-                    $fecha_cargo = $data['data']['fecha_cargo'] ?? null;
+                    $id_usuario = $data['data']['id_usuario'] ?? null;
+                    $fecha_inicio = date('Y-m-d', strtotime($data['data']['fecha_inicio'])) ?? null;
+                    $fecha_fin = date('Y-m-d', strtotime($data['data']['fecha_fin'])) ?? null;
 
+                    if ($fecha_inicio) {
+                        $result = DB::table('cargos')
+                            ->select('cargos.*')
+                            ->where('cargos.id_usuario', '=', $id_usuario)
+                            ->whereBetween('cargos.fecha_cargo', array($fecha_inicio, $fecha_fin))
+                            ->get();
+                        for ($x=0; $x<count($result); $x++){
+                            $pagado = DB::table('pagos')
+                                ->select('pagos.*')
+                                ->where('pagos.id_cargo', '=', $result[$x]->id)
+                                ->first();
 
-                    $result = DB::table('cargos')
-                        ->select('cargos.*')
-                        ->get();
+                            if ($pagado){
+                                $result[$x]->estatus = "Pagado";
+                            } else {
+                                $result[$x]->estatus = "Por Pagar";
+                            }
+                        }
 
-
-                    $insert = DB::table('cargos')->insertGetId([
-                        "monto_cargo" => $monto_cargo,
-                        "fecha_cargo" => $fecha_cargo,
-                        "id_usuario" => 4
-                    ]);
-
-                    dd($insert);
+                        /* if (count($result)>0) {
+                             for ($x=0;$x<count($result);$x++) {
+                                 $result[$x]->fecha_cargo = date("d/M/Y", strtotime($result[$x]->fecha_cargo));
+                             }
+                         }*/
+                    } else {
+                        $result = DB::table('cargos')
+                            ->select('cargos.*')
+                            ->where('cargos.id_usuario', '=', $id_usuario)
+                            ->get();
+                    }
 
 
                     if ($result) {

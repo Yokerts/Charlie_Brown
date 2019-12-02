@@ -55,6 +55,7 @@ Route::group(['middleware' => 'cors'], function () {
 
     Route::post('_usuario_permiso_datos', 'UsuarioController@permiso');
 
+    Route::post('_cargo_datos', 'CargoController@all');
     Route::post('_cargo_agregar', 'CargoController@add');
     Route::post('_cargo_xid', 'CargoController@xid');
 
@@ -63,6 +64,7 @@ Route::group(['middleware' => 'cors'], function () {
 
     Route::post('_pago_datos', 'PagoController@all');
     Route::post('_pago_agregar', 'PagoController@add');
+    Route::post('_pago_xid', 'PagoController@show');
 
 });
 
