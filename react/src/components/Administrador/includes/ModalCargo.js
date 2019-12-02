@@ -77,6 +77,7 @@ class ModalCargo extends Component {
     };
 
     cargo = () => {
+        console.log(this.state);
         CargoService.all(this.state).then(response => {
             alert(response.mensaje);
             this.close();

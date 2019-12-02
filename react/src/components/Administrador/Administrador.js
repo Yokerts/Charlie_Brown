@@ -172,7 +172,7 @@ class Administrador extends Component {
                             <div style={{textAlign: "left"}}>
                                 <ModalCargo
                                     tipo={'add'}
-                                    item={{id_cat_mes: this.state.id_cat_mes, mes: this.state.mes} || {}}
+                                    item={{id_cat_mes: this.state.id_cat_mes, mes: this.state.hoy} || {}}
                                     RefrechList={this.RefrechList}
                                     componente={<Button style={{margin: '25px'}} color="primary" variant="contained">Cargar
                                         Mensualidad General </Button>}
@@ -216,7 +216,7 @@ class Administrador extends Component {
                                                             tipo={'add'}
                                                             item={{
                                                                 id_cat_mes: this.state.id_cat_mes,
-                                                                mes: this.state.mes,
+                                                                mes: this.state.hoy,
                                                                 id_usuario: this.state.id_usuario
                                                             } || {}}
                                                             RefrechList={this.RefrechList}
