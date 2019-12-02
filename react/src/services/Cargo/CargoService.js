@@ -2,6 +2,18 @@ import {HttpRequest} from '../../settings/Libs/Libs';
 
 class CargoService {
 
+    static get = (item) => {
+        let params = {
+            "id_usuario": item.id_usuario || ''
+        };
+        return new Promise((resolve, reject) => {
+            HttpRequest.post('_cargo_datos', params).then((response) => {
+                resolve(response);
+            }).catch((error) => {
+                reject(error);
+            });
+        });
+    };
 
     static all = (item) => {
         let params = {

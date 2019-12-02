@@ -96,7 +96,7 @@ class Administrador extends Component {
 
     updateDate = (date) => {
         this.setState({
-            mes: date.toString(),
+            fecha_inicio: date.toString(),
             hoy: new Date(date)
         })
     }

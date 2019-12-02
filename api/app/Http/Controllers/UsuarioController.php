@@ -116,6 +116,19 @@ class UsuarioController extends Controller
                         ->where('usuario.id_usuario', '=', $id_usuario)
                         ->first();
 
+                    $saldos = DB::table('saldos')
+                        ->select('saldos.*')
+                        ->where('saldos.id_usuario', '=', $id_usuario)
+                        ->get();
+                    if (count($saldos)>0) {
+                        $saldo_total=0;
+                        for ($x = 0; $x<count($saldos); $x++) {
+                            $saldo_total = $saldo_total+$saldos[$x]->monto_saldo;
+                        }
+                        $row->saldo= $row->saldo+$saldo_total;
+                    }
+
+
                     if ($row->foto) {
                         $row->foto_archivo = $row->foto;
                         $formato = explode('.', $row->foto_archivo);
