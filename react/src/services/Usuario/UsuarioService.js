@@ -81,6 +81,7 @@ class UsuarioService {
 			telefono: form.telefono,
 			direccion: form.direccion,
 			saldo: form.saldo,
+			rfc: form.rfc,
 			foto_archivo: form.foto_archivo,
 			foto_formato: form.foto_formato,
 		};

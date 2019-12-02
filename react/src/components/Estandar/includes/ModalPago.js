@@ -80,6 +80,7 @@ class ModalPago extends Component {
 		console.log(this.state);
 		PagoService.add(this.state).then(response => {
 			alert(response.mensaje);
+			this.props.RefrechList();
 			this.close();
 		}).catch(error => {
 			alert(error.mensaje);

@@ -14,6 +14,8 @@ class LoginService {
 					expiracion: response.data.expiracion || '',
 					username: response.data.username || '',
 					id_cat_sexo: response.data.id_cat_sexo || '',
+					id_cat_estado: response.data.id_cat_estado || '',
+					id_cat_tipo_permiso: response.data.id_cat_tipo_permiso || '',
 					password: response.data.password || '',
 					id_usuario: response.data.id_usuario || '',
 					nombre: response.data.nombre || '',

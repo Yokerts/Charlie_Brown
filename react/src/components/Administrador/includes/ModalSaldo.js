@@ -81,6 +81,7 @@ class ModalSaldo extends Component {
     cargo = () => {
         SaldoService.add(this.state).then(response => {
             alert(response.mensaje);
+            this.props.RefrechList();
             this.close();
         }).catch(error => {
             alert(error.mensaje);

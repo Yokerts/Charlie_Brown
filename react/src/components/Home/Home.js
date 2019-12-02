@@ -1,13 +1,13 @@
 import React, {Component, Fragment} from 'react';
 
 import Header from "../../includes/Header";
-import UsuarioService from "../../services/Usuario/UsuarioService";
-import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import {ReactLocalStorageService} from "../../settings/Libs/Libs";
+import SexoService from "../../services/Sexo/SexoService";
+import EstadosService from "../../services/Estados/EstadosService";
+import UsuarioService from "../../services/Usuario/UsuarioService";
 
 class Home extends Component {
 
@@ -15,8 +15,15 @@ class Home extends Component {
 
     constructor(props) {
         super(props);
+        let Usr = ReactLocalStorageService.get('Usr') || {};
+
         this.state = {
+            id_usuario: Usr.id_usuario,
             params: props.match.params,
+            cat_estado: [],
+            cat_sexo: [],
+            id_cat_estado: '',
+            id_cat_sexo: '',
         };
         this.RefrechList();
     }
@@ -44,7 +51,8 @@ class Home extends Component {
                 rfc: response.data.rfc,
                 saldo: response.data.saldo,
                 telefono: response.data.telefono,
-                username: response.data.username
+                username: response.data.username,
+
             });
         }).catch(error => {
             this.setState({
@@ -52,8 +60,34 @@ class Home extends Component {
             });
             alert(error.mensaje);
         });
+        SexoService.get().then(response => {
+            this.setState({
+                cat_sexo: response.data
+            })
+        }).catch(error => {
+            alert(error.mensaje);
+        })
+        EstadosService.get().then(response => {
+            this.setState({
+                cat_estado: response.data
+            })
+        }).catch(error => {
+            alert(error.mensaje);
+        })
     };
 
+    save = () => {
+        UsuarioService.update(this.state).then(response => {
+            alert(response.mensaje);
+            this.all();
+        }).catch(error => {
+            this.setState({
+                lista_pagos: [],
+                bandTable: 'Cargos',
+            });
+            alert(error.mensaje);
+        });
+    }
 
     render() {
 
@@ -64,9 +98,6 @@ class Home extends Component {
             <Fragment>
 
                 <Header {...this.props}/>
-                {
-                    JSON.stringify(this.state.params, null, 2)
-                }
 
                 <div style={{margin: "20px"}}>
                     <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
@@ -78,8 +109,9 @@ class Home extends Component {
                                 margin="normal"
                                 variant="outlined"
                                 fullWidth
+                                defaultValue={' '}
                                 value={this.state.username}
-                                onBlur={()=>this.props.actions.updateInput}
+                                onBlur={() => this.props.actions.updateInput}
                                 onChange={(e) => {
                                     this.setState({
                                         username: e.target.value
@@ -95,6 +127,7 @@ class Home extends Component {
                                 margin="normal"
                                 variant="outlined"
                                 fullWidth
+                                defaultValue={' '}
                                 value={this.state.nombre}
                                 onChange={(e) => {
                                     this.setState({
@@ -112,6 +145,7 @@ class Home extends Component {
                                 margin="normal"
                                 variant="outlined"
                                 fullWidth
+                                defaultValue={' '}
                                 value={this.state.apellido_paterno}
                                 onChange={(e) => {
                                     this.setState({
@@ -129,6 +163,7 @@ class Home extends Component {
                                 margin="normal"
                                 variant="outlined"
                                 fullWidth
+                                defaultValue={' '}
                                 value={this.state.apellido_materno}
                                 onChange={(e) => {
                                     this.setState({
@@ -146,6 +181,7 @@ class Home extends Component {
                                 margin="normal"
                                 variant="outlined"
                                 fullWidth
+                                defaultValue={' '}
                                 value={this.state.telefono}
                                 onChange={(e) => {
                                     this.setState({
@@ -163,6 +199,7 @@ class Home extends Component {
                                 margin="normal"
                                 variant="outlined"
                                 fullWidth
+                                defaultValue={' '}
                                 value={this.state.email}
                                 onChange={(e) => {
                                     this.setState({
@@ -180,6 +217,7 @@ class Home extends Component {
                                 margin="normal"
                                 variant="outlined"
                                 fullWidth
+                                defaultValue={' '}
                                 value={this.state.direccion}
                                 onChange={(e) => {
                                     this.setState({
@@ -197,23 +235,26 @@ class Home extends Component {
                                 margin="normal"
                                 variant="outlined"
                                 fullWidth
+                                defaultValue={' '}
                                 value={this.state.saldo}
                                 onChange={(e) => {
                                     this.setState({
                                         saldo: e.target.value
                                     });
                                 }}
-                                disabled={this.props.tipo === 'view'}
+                                disabled
                             />
                         </Grid>
 
                         <Grid item xs={6} sm={6} md={6} lg={4} xl={4}>
-                            <TextField
+                                <TextField
                                 label="RFC"
                                 type="text"
                                 margin="normal"
                                 variant="outlined"
                                 fullWidth
+                                length
+                                defaultValue={' '}
                                 value={this.state.rfc}
                                 onChange={(e) => {
                                     this.setState({
@@ -223,11 +264,67 @@ class Home extends Component {
                                 disabled={this.props.tipo === 'view'}
                             />
                         </Grid>
+                        <Grid item xs={6} sm={6} md={6} lg={2} xl={2}>
+                            <TextField
+                                select
+                                label="Estado"
+                                margin="normal"
+                                variant="outlined"
+                                fullWidth
+                                SelectProps={{
+                                    native: true,
+                                    MenuProps: {},
+                                }}
+                                value={this.state.id_cat_estado}
+                                onChange={(e) => {
+                                    this.setState({
+                                        id_cat_estado: e.target.value
+                                    })
+                                }}
+                                disabled={this.props.tipo === 'view'}
+                            >
+                                <option value={''}>&nbsp;</option>
+                                {this.state.cat_estado.map((item, index) => (
+                                    <option key={index} value={item.id}>
+                                        {item.estado}
+                                    </option>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={6} sm={6} md={6} lg={2} xl={2}>
+                            <TextField
+                                select
+                                label="Sexo"
+                                margin="normal"
+                                variant="outlined"
+                                fullWidth
+                                SelectProps={{
+                                    native: true,
+                                    MenuProps: {},
+                                }}
+                                value={this.state.id_cat_sexo}
+                                onChange={(e) => {
+                                    this.setState({
+                                        id_cat_sexo: e.target.value
+                                    })
+                                }}
+                                disabled={this.props.tipo === 'view'}
+                            >
+                                <option value={''}>&nbsp;</option>
+                                {this.state.cat_sexo.map((item, index) => (
+                                    <option key={index} value={item.id_cat_sexo}>
+                                        {item.sexo}
+                                    </option>
+                                ))}
+                            </TextField>
+                        </Grid>
 
-                        <Grid item xs={6} sm={6} md={6} lg={4} xl={4}>
-                            <Button style={{margin: '25px'}} color="primary" variant="contained">
-                                Guardar
-                            </Button>
+                        <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                            <div style={{textAlign: 'center'}}>
+                                <Button style={{margin: '25px'}} onClick={() => this.save()} color="primary" variant="contained">
+                                    Guardar
+                                </Button>
+                            </div>
                         </Grid>
                     </Grid>
                 </div>

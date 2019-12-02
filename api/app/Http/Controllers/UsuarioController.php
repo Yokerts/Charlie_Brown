@@ -332,13 +332,20 @@ class UsuarioController extends Controller
             $validator = Validator::make($data['data'], [
                 'id_usuario' => 'required',
                 'id_cat_sexo' => 'required',
+                'id_cat_estado' => 'required',
+                'id_cat_tipo_permiso' => '',
                 'username' => 'required',
-                'password' => 'required',
+                'password' => '',
                 'nombre' => 'required',
                 'apellido_paterno' => 'required',
                 'apellido_materno' => 'required',
-                'foto_archivo' => 'required',
-                'foto_formato' => 'required',
+                'saldo' => 'required|numeric',
+                'email' => 'required|email',
+                'telefono' => 'required',
+                'rfc' => '',
+                'direccion' => '',
+                'foto_archivo' => '',
+                'foto_formato' => '',
             ]);
 
             $flag = false;
@@ -351,11 +358,18 @@ class UsuarioController extends Controller
 
                     $id_usuario = $data['data']['id_usuario'] ?? null;
                     $id_cat_sexo = $data['data']['id_cat_sexo'] ?? null;
+                    $id_cat_estado = $data['data']['id_cat_estado'] ?? null;
+                    $id_cat_tipo_permiso = $data['data']['id_cat_tipo_permiso'] ?? null;
                     $username = $data['data']['username'] ?? null;
-                    $password = $data['data']['password'] ?? null;
                     $nombre = $data['data']['nombre'] ?? null;
                     $apellido_paterno = $data['data']['apellido_paterno'] ?? null;
                     $apellido_materno = $data['data']['apellido_materno'] ?? null;
+                    $saldo = $data['data']['saldo'] ?? null;
+                    $telefono = $data['data']['telefono'] ?? null;
+                    $email = $data['data']['email'] ?? null;
+                    $direccion = $data['data']['direccion'] ?? null;
+                    $rfc = $data['data']['rfc'] ?? null;
+
 
                     $foto_archivo = $data['data']["foto_archivo"] ?? null;
                     $foto_formato = $data['data']["foto_formato"] ?? null;
@@ -386,11 +400,16 @@ class UsuarioController extends Controller
                         ->where('usuario.id_usuario', '=', $id_usuario)
                         ->update([
                             "id_cat_sexo" => $id_cat_sexo,
+                            "id_cat_estado" => $id_cat_estado,
                             "username" => $username,
-                            "password" => $password,
                             "nombre" => $nombre,
                             "apellido_paterno" => $apellido_paterno,
                             "apellido_materno" => $apellido_materno,
+                            "saldo" => $saldo,
+                            "telefono" => $telefono,
+                            "email" => $email,
+                            "direccion" => $direccion,
+                            "rfc" => $rfc,
                             "foto" => $ruta,
                             "token" => $row->token,
                             "expiracion" => $row->expiracion,
@@ -538,6 +557,37 @@ class UsuarioController extends Controller
                         ->select('usuario.*')
                         ->where('usuario.id_cat_tipo_permiso', '=', $id_cat_tipo_permiso)
                         ->get();
+
+                    if (count($result)>0){
+                        for ($u=0; $u<count($result); $u++) {
+                            $saldos = DB::table('saldos')
+                                ->select('saldos.*')
+                                ->where('saldos.id_usuario', '=', $result[$u]->id_usuario)
+                                ->get();
+
+                            if (count($saldos)>0) {
+                                $saldo_total=0;
+                                for ($x = 0; $x<count($saldos); $x++) {
+                                    $saldo_total = $saldo_total+$saldos[$x]->monto_saldo;
+                                }
+                                $result[$u]->saldo= $result[$u]->saldo+$saldo_total;
+                            }
+
+                            $pagos = DB::table('pagos')
+                                ->select('pagos.*')
+                                ->where('pagos.id_usuario', '=', $result[$u]->id_usuario)
+                                ->get();
+
+                            if (count($pagos)>0) {
+                                $saldo_pagos=0;
+                                for ($x = 0; $x<count($pagos); $x++) {
+                                    $saldo_pagos = $saldo_pagos+$pagos[$x]->monto_pago;
+                                }
+                                $result[$u]->saldo= $result[$u]->saldo-$saldo_pagos;
+                            }
+                        }
+                    }
+
 
                     foreach ($result as $key => $row) {
                         if ($row->foto) {

@@ -32,13 +32,14 @@ class Estandar extends Component {
             id_usuario: Usr.id_usuario,
             fecha_inicio: new Date(),
             fecha_fin: new Date(),
-            bandTable : 'Saldos',
+            bandTable: 'Saldos',
         };
         this.all();
     }
 
     RefrechList = () => {
-        this.all();
+        this.getSaldoTotal();
+        this.listCargos();
     };
 
     all = () => {
@@ -53,6 +54,12 @@ class Estandar extends Component {
             alert(error.mensaje);
         });
 
+
+        this.getSaldoTotal();
+        this.listSaldos();
+    };
+
+    getSaldoTotal = () => {
         let params = {
             id_usuario: this.state.id_usuario
         };
@@ -66,8 +73,7 @@ class Estandar extends Component {
             });
             alert(error.mensaje);
         });
-        this.listSaldos();
-    };
+    }
 
     listSaldos = (item) => {
         let params = {
@@ -85,12 +91,12 @@ class Estandar extends Component {
                 lista_pagos: [],
                 lista_saldos: response.data,
                 lista_cargos: [],
-                bandTable : 'Saldos',
+                bandTable: 'Saldos',
             });
         }).catch(error => {
             this.setState({
                 lista_pagos: [],
-                bandTable : 'Saldos',
+                bandTable: 'Saldos',
             });
             alert(error.mensaje);
         });
@@ -107,12 +113,12 @@ class Estandar extends Component {
                 lista_pagos: [],
                 lista_saldos: [],
                 lista_cargos: response.data,
-                bandTable : 'Cargos',
+                bandTable: 'Cargos',
             });
         }).catch(error => {
             this.setState({
                 lista_pagos: [],
-                bandTable : 'Cargos',
+                bandTable: 'Cargos',
             });
             alert(error.mensaje);
         });
@@ -130,12 +136,12 @@ class Estandar extends Component {
                 lista_cargos: [],
                 lista_saldos: [],
                 lista_pagos: response.data,
-                bandTable : 'Pagos',
+                bandTable: 'Pagos',
             });
         }).catch(error => {
             this.setState({
                 lista_pagos: [],
-                bandTable : 'Pagos',
+                bandTable: 'Pagos',
             });
             alert(error.mensaje);
         });
@@ -278,7 +284,8 @@ class Estandar extends Component {
                         <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                             {
                                 this.state.bandTable == 'Saldos' ? (
-                                    <label style={{fontSize: '20px'}}>Saldos {moment(this.state.fecha_inicio).format('DD/MM/YYYY') == moment(this.state.fecha_fin).format('DD/MM/YYYY') ?
+                                    <label
+                                        style={{fontSize: '20px'}}>Saldos {moment(this.state.fecha_inicio).format('DD/MM/YYYY') == moment(this.state.fecha_fin).format('DD/MM/YYYY') ?
                                         moment(this.state.fecha_inicio).format('DD/MM/YYYY') : moment(this.state.fecha_fin).format('DD/MM/YYYY') + ' - ' + moment(this.state.fecha_fin).format('DD/MM/YYYY')}
                                     </label>
                                 ) : this.state.bandTable == 'Cargos' ? (
@@ -298,10 +305,10 @@ class Estandar extends Component {
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {this.state.lista_saldos.length > 0? this.state.lista_saldos.map((item, index) => (
+                                        {this.state.lista_saldos.length > 0 ? this.state.lista_saldos.map((item, index) => (
                                             <tr key={index}>
                                                 <td>{moment(item.fecha_saldo).format("DD MMMM YYYY")}</td>
-                                                <td>{item.monto_saldo}</td>
+                                                <td><div style={{margin: '12px'}}>{item.monto_saldo}</div></td>
                                             </tr>
                                         )) : <tr>
                                             <td>Sin registro</td>
@@ -316,7 +323,6 @@ class Estandar extends Component {
                                         <tr>
                                             <th>Fecha</th>
                                             <th>Monto</th>
-                                            <th>Estatus</th>
                                             <th>Acción</th>
                                         </tr>
                                         </thead>
@@ -325,26 +331,30 @@ class Estandar extends Component {
                                             <tr key={index}>
                                                 <td>{moment(item.fecha_cargo).format("DD MMMM YYYY")}</td>
                                                 <td>{item.monto_cargo}</td>
-                                                <td>{item.estatus}</td>
                                                 <td style={{textAlign: 'center'}}>
-                                                    <ModalPago
-                                                        tipo={'add'}
-                                                        item={{
-                                                            id_usuario: item.id_usuario,
-                                                            id_cargo: item.id,
-                                                            monto_pago: item.monto_cargo,
-                                                            fecha_pago: item.fecha_cargo
-                                                        } || {}}
-                                                        RefrechList={this.RefrechList}
-                                                        componente={<Button style={{margin: '5px'}} color="secondary"
-                                                                            variant="contained">
-                                                            Pagar
-                                                        </Button>}
-                                                    />
+                                                    {item.estatus ? <div style={{margin: '12px'}}><label style={{
+                                                            fontSize: '20px',
+                                                            color: '#00a82d',
+                                                        }}>Pagado</label></div> :
+                                                        <ModalPago
+                                                            tipo={'add'}
+                                                            item={{
+                                                                id_usuario: item.id_usuario,
+                                                                id_cargo: item.id,
+                                                                monto_pago: item.monto_cargo,
+                                                                fecha_pago: item.fecha_cargo
+                                                            } || {}}
+                                                            RefrechList={this.RefrechList}
+                                                            componente={<Button style={{margin: '5px'}}
+                                                                                color="secondary"
+                                                                                variant="contained">
+                                                                Pagar
+                                                            </Button>}
+                                                        />
+                                                    }
                                                 </td>
                                             </tr>
                                         )) : <tr>
-                                            <td>Sin registro</td>
                                             <td>Sin registro</td>
                                             <td>Sin registro</td>
                                             <td>Sin registro</td>
@@ -364,7 +374,7 @@ class Estandar extends Component {
                                         {this.state.lista_pagos.length > 0 ? this.state.lista_pagos.map((item, index) => (
                                             <tr key={index}>
                                                 <td>{moment(item.fecha_pago).format("DD MMMM YYYY")}</td>
-                                                <td>{item.monto_pago}</td>
+                                                <td><div style={{margin: '12px'}}>{item.monto_pago}</div></td>
                                             </tr>
                                         )) : <tr>
                                             <td>Sin registro</td>

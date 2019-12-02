@@ -45,9 +45,9 @@ class CargoController extends Controller
                                 ->first();
 
                             if ($pagado){
-                                $result[$x]->estatus = "Pagado";
+                                $result[$x]->estatus = 1;
                             } else {
-                                $result[$x]->estatus = "Por Pagar";
+                                $result[$x]->estatus = 0;
                             }
                         }
 

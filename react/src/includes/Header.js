@@ -98,20 +98,19 @@ class Header extends Component {
                             <ListItemText primary={'Usuario'}/>
                         </ListItem>
 
-                        <ListItem button onClick={this.Administrador}>
-                            <ListItemIcon>
-                                <ListAltOutlined/>
-                            </ListItemIcon>
-                            <ListItemText primary={'Rol Administrador'}/>
-                        </ListItem>
-
-                        <ListItem button onClick={this.Estandar}>
-                            <ListItemIcon>
-                                <ListAltOutlined/>
-                            </ListItemIcon>
-                            <ListItemText primary={'Rol Estandar'}/>
-                        </ListItem>
-
+                        {Usr.id_cat_tipo_permiso == 1 ? <ListItem button onClick={this.Administrador}>
+                                <ListItemIcon>
+                                    <ListAltOutlined/>
+                                </ListItemIcon>
+                                <ListItemText primary={'Rol Administrador'}/>
+                            </ListItem> :
+                            <ListItem button onClick={this.Estandar}>
+                                <ListItemIcon>
+                                    <ListAltOutlined/>
+                                </ListItemIcon>
+                                <ListItemText primary={'Rol Estandar'}/>
+                            </ListItem>
+                        }
                     </List>
                 </Drawer>
             </Fragment>
