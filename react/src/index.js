@@ -7,7 +7,7 @@ import AppRoutes from './route';
 import './index.css';
 
 ReactDOM.render(
-	<BrowserRouter basename={'/'}>
+	<BrowserRouter basename={'/charlie_brown/'}>
 		<AppRoutes/>
 	</BrowserRouter>,
 	document.getElementById('root')

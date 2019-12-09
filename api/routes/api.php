@@ -25,7 +25,6 @@ Route::group(['middleware' => 'cors'], function () {
     Route::get('_meses', 'CatalogosController@meses');
 
 
-
     Route::post('_login', 'Auth\LoginController@Login');
     Route::post('_register', 'RegisterController@Login');
 

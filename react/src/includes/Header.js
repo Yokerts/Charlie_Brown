@@ -7,10 +7,17 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import $State, {ReactLocalStorageService} from '../settings/Libs/Libs';
 import Drawer from "@material-ui/core/Drawer";
+import Hidden from '@material-ui/core/Hidden';
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
+import {makeStyles, useTheme, withStyles} from '@material-ui/core/styles';
+import Divider from '@material-ui/core/Divider';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import MailIcon from '@material-ui/icons/Mail';
+import PropTypes from 'prop-types';
+
 
 class Header extends Component {
 
